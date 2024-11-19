@@ -1,11 +1,6 @@
-openai
-OpenAIError
 streamlit
-Image
-ImageDraw 
-ImageFont 
-UnidentifiedImageError
-load_dotenv
-os
-cv2
+openai
+Pillow
+python-dotenv
+opencv-python-headlessopencv-python-headless
 numpy
