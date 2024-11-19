@@ -209,7 +209,7 @@ def get_motivational_quote(answers):
         )
         motivational_quote = response['choices'][0]['message']['content'].strip()
         return motivational_quote
-    except openai.error.OpenAIError as e:
+    except openai.OpenAIError as e:
         st.error(f"ChatGPT API 호출 중 오류가 발생했습니다: {e}")
         return None
 
