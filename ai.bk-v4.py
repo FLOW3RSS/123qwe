@@ -150,28 +150,6 @@ st.markdown("""
             margin: 2rem 0;
             border: 2px solid #e9ecef;
         }
-        
-        /* 툴팁 스타일 */
-        .tooltip {
-            position: relative;
-            display: inline-block;
-            cursor: help;
-        }
-        
-        .tooltip:hover::after {
-            content: attr(data-tooltip);
-            position: absolute;
-            bottom: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            padding: 0.5rem 1rem;
-            background: #2C3E50;
-            color: white;
-            border-radius: 4px;
-            font-size: 0.875rem;
-            white-space: nowrap;
-            z-index: 1000;
-        }
     </style>
 """, unsafe_allow_html=True)
 
@@ -187,7 +165,7 @@ def get_motivational_quote(answers):
         )
         motivational_quote = response['choices'][0]['message']['content'].strip()
         return motivational_quote
-    except openai.error.OpenAIError as e:
+    except openai.OpenAIError as e:  # 예외 처리 수정
         st.error(f"ChatGPT API 호출 중 오류가 발생했습니다: {e}")
         return None
 
