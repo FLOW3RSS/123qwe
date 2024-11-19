@@ -237,4 +237,9 @@ for question in questions:
 if st.button("결과 제출"):
     if all(answers):  # 모든 질문에 답변이 있는지 확인
         motivational_quote = get_motivational_quote(answers)
-        if motivational_quote
+        if motivational_quote:동기 부여 인용이 있으면:
+            st.markdown(f"<h3>✨ 추천 글귀: {motivational_quote}</h3>", unsafe_allow_html=True)
+        else:
+            st.error("추천 글귀를 생성하는 중 문제가 발생했습니다.")
+    else:
+        st.warning("모든 질문에 답변해주세요!")
