@@ -254,7 +254,7 @@ def render_ui():
 
                     with col2:
                         text_color = st.color_picker("🎨 글귀 색상", "#000000")
-                        stroke_color = st.color_picker("✏️ 글귀 테두리 색상", "#FFFFFF")
+                        stroke_color = st.color_picker("✏️ 글귀 테두리 색상", "#FFFFFF")파일 내용을 여기에 입력하세요
 
                     st.markdown('<div class="section-header"><i class="fas fa-arrows-alt"></i> 글귀 위치를 조정하세요</div>', unsafe_allow_html=True)
                     x_position = st.slider("⬅️➡️ x 좌표 (픽셀)", min_value=0, max_value=2048, value=512, step=10)
