@@ -1,6 +1,7 @@
 streamlit
 openai
-Pillow베개
+Pillow
 python-dotenv
-opencv-python-headless
-numpy
+numpy==1.23.5
+opencv-python-headless==4.5.5.64
+
