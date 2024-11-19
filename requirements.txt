@@ -1,6 +1,6 @@
 streamlit
 openai
-Pillow
+Pillow베개
 python-dotenv
-opencv-contrib-python-headless==4.8.0.76
+opencv-python-headless
 numpy
