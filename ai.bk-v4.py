@@ -43,20 +43,20 @@ st.markdown("""
         .main-title {
             color: #2C3E50;
             padding: 2rem 0;
-            font-size: 2.0rem;
+            font-size: 2.5rem;
             font-weight: 700;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             text-align: center;
-            margin-bottom: 1.5rem;
+            margin-bottom: 2rem;
         }
         
         /* 섹션 헤더 스타일 */
         .section-header {
             background: #f8f9fa;
-            padding: 1rem;
-            border-radius: 10px;
+            padding: 1.5rem;
+            border-radius: 15px;
             margin: 1.5rem 0;
             border-left: 5px solid #667eea;
         }
@@ -151,50 +151,6 @@ st.markdown("""
             margin: 2rem 0;
             border: 2px solid #e9ecef;
         }
-        
-        /* 툴팁 스타일 */
-        .tooltip {
-            position: relative;
-            display: inline-block;
-            cursor: help;
-        }
-        
-        .tooltip:hover::after {
-            content: attr(data-tooltip);
-            position: absolute;
-            bottom: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            padding: 0.5rem 1rem;
-            background: #2C3E50;
-            color: white;
-            border-radius: 4px;
-            font-size: 0.875rem;
-            white-space: nowrap;
-            z-index: 1000;
-        }
-        
-        /* 결과 섹션 스타일 */
-        .result-section {
-            margin-top: -550px;  /* Q&A 섹션 높이만큼 위로 조정 */
-            transition: margin-top 0.3s ease;
-            display: none;  /* 초기에는 숨김 */
-        }
-        
-        .result-section.visible {
-            margin-top: 0;
-            display: block;
-        }
-        
-        /* Q&A 섹션 스타일 */
-        .qa-section {
-            transition: all 0.3s ease;
-            margin-bottom: 550px;  /* 결과 섹션이 올라올 공간 확보 */
-        }
-        
-        .qa-section.hidden {
-            display: none;
-        }
     </style>
 """, unsafe_allow_html=True)
 
@@ -228,10 +184,15 @@ questions = [
 answers = []
 
 for question in questions:
+    st.markdown(f'<div class="input-container"><div><i class="{question["icon"]} icon"></i>{question["text"]}</div></div>', unsafe_allow_html=True)
     answer = st.text_input(question["text"])
     answers.append(answer)
 
-if st.button("결과 제출"):
-    motivational_quote = get_motivational_quote(answers)
-    if motivational_quote:
-        st.write(f"추천 글귀: {motivational_quote}")
+if st.button("✨ 결과 제출"):
+    if all(answers):
+        motivational_quote = get_motivational_quote(answers)
+        if motivational_quote:
+            st.markdown('<div class="result-container"><h3><i class="fas fa-quote-left" style="color: #667eea;"></i> 추천 글귀</h3>', unsafe_allow_html=True)
+            st.write(f"{motivational_quote}")
+    else:
+        st.warning('💌 모든 질문에 답해주세요!')
