@@ -252,7 +252,7 @@ def render_ui():
                         font_size = st.number_input("📏 글귀 크기 (pt)", min_value=10, max_value=200, value=30, step=1)
 
                     with col2:
-                        text_color = st.color_picker("🎨 글귀 색상", "#000000")text_color = st.color_picker("🎨 글귀 색상", "#000000")
+                        text_color = st.color_picker("🎨 글귀 색상", "#000000")
                         stroke_color = st.color_picker("✏️ 글귀 테두리 색상", "#FFFFFF")
 
                     st.markdown('<div class="section-header"><i class="fas fa-arrows-alt"></i> 글귀 위치를 조정하세요</div>', unsafe_allow_html=True)
