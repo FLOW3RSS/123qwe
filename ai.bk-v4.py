@@ -157,13 +157,15 @@ st.markdown("""
 # 핵심 함수들
 def get_motivational_quote(answers):
     try:
-        response = openai.Completion.create(
-            engine="text-davinci-003",
-            prompt=f"사용자의 심리 검사 결과가 다음과 같아: {answers}. 이 사용자에게 어울리는 짧고 따뜻하고 긍정적인 명언과 같은 글귀 1개 20글자 내로 추천해줘.",
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "user", "content": f"사용자의 심리 검사 결과가 다음과 같아: {answers}. 이 사용자에게 어울리는 짧고 따뜻하고 긍정적인 명언과 같은 글귀 1개 20글자 내로 추천해줘."}
+            ],
             max_tokens=50,
             temperature=0.7
         )
-        motivational_quote = response['choices'][0]['text'].strip()
+        motivational_quote = response['choices'][0]['message']['content'].strip()
         return motivational_quote
     except OpenAIError as e:
         st.error(f"ChatGPT API 호출 중 오류가 발생했습니다: {e}")
