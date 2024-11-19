@@ -172,28 +172,6 @@ st.markdown("""
             white-space: nowrap;
             z-index: 1000;
         }
-        
-        /* 결과 섹션 스타일 */
-        .result-section {
-            margin-top: -550px;  /* Q&A 섹션 높이만큼 위로 조정 */
-            transition: margin-top 0.3s ease;
-            display: none;  /* 초기에는 숨김 */
-        }
-        
-        .result-section.visible {
-            margin-top: 0;
-            display: block;
-        }
-        
-        /* Q&A 섹션 스타일 */
-        .qa-section {
-            transition: all 0.3s ease;
-            margin-bottom: 550px;  /* 결과 섹션이 올라올 공간 확보 */
-        }
-        
-        .qa-section.hidden {
-            display: none;
-        }
     </style>
 """, unsafe_allow_html=True)
 
@@ -209,7 +187,7 @@ def get_motivational_quote(answers):
         )
         motivational_quote = response['choices'][0]['message']['content'].strip()
         return motivational_quote
-    except openai.OpenAIError as e:
+    except openai.error.OpenAIError as e:
         st.error(f"ChatGPT API 호출 중 오류가 발생했습니다: {e}")
         return None
 
