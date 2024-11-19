@@ -279,7 +279,7 @@ def render_ui():
             stroke_color = st.color_picker("✏️ 글귀 테두리 색상", st.session_state['stroke_color'])
             st.session_state['stroke_color'] = stroke_color
 
-                st.markdown('<div class="section-header"><i class="fas fa-arrows-alt"></i> 글귀 위치를 조정하세요</div>', unsafe_allow_html=True)
+            st.markdown('<div class="section-header"><i class="fas fa-arrows-alt"></i> </div>', unsafe_allow_html=True)
         x_position = st.slider("⬅️➡️ x 좌표 (픽셀)", min_value=0, max_value=2048, value=st.session_state['x_position'], step=10)
         st.session_state['x_position'] = x_position
         y_position = st.slider("⬆️⬇️ y 좌표 (픽셀)", min_value=0, max_value=2048, value=st.session_state['y_position'], step=10)
