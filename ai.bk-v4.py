@@ -256,6 +256,7 @@ def render_ui():
     # 이미지 선택 및 글귀 추가
     st.markdown('<div class="section-header"><i class="fas fa-image"></i> 배경 이미지를 선택하세요</div>', unsafe_allow_html=True)
     uploaded_images = ["네잎클로버.jpg", '라이즈 소희.jpg', '라이즈 앤톤.jpg', '라이즈 원빈.jpg', '라이즈 은석.jpg', '물감.jpg', '물결.jpg', '바다.jpg', '비눗방울.jpg', '에스파 카리나.jpg', '투데이.jpg', '고양이.jpg', '동화.jpg', '노을.jpg', '어항 고양이.jpg', '어항.jpg', '화사한 고양이.jpg', '심해.jpg', '크리스마스.jpg']
+
     selected_image = st.selectbox("🖼️ 배경 이미지 선택", options=uploaded_images)
 
     if selected_image:
@@ -278,7 +279,7 @@ def render_ui():
             stroke_color = st.color_picker("✏️ 글귀 테두리 색상", st.session_state['stroke_color'])
             st.session_state['stroke_color'] = stroke_color
 
-        st.markdown('<div class="section-header"><i class="fas fa-arrows-alt"></i> 글귀 위치를 조정하세요</div>', unsafe_allow_html=True)
+                st.markdown('<div class="section-header"><i class="fas fa-arrows-alt"></i> 글귀 위치를 조정하세요</div>', unsafe_allow_html=True)
         x_position = st.slider("⬅️➡️ x 좌표 (픽셀)", min_value=0, max_value=2048, value=st.session_state['x_position'], step=10)
         st.session_state['x_position'] = x_position
         y_position = st.slider("⬆️⬇️ y 좌표 (픽셀)", min_value=0, max_value=2048, value=st.session_state['y_position'], step=10)
@@ -301,3 +302,4 @@ def render_ui():
             st.image(final_image, caption="✨ 글귀가 추가된 이미지", use_column_width=False)
 
 render_ui()
+
