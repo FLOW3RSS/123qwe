@@ -19,6 +19,20 @@ if 'show_result' not in st.session_state:
     st.session_state.show_result = False
 if 'quote' not in st.session_state:
     st.session_state['quote'] = ""  # 기본값 설정
+if 'background_image_url' not in st.session_state:
+    st.session_state['background_image_url'] = "네잎클로버.jpg"
+if 'font_choice' not in st.session_state:
+    st.session_state['font_choice'] = "나눔손글씨 가람연꽃"
+if 'font_size' not in st.session_state:
+    st.session_state['font_size'] = 30
+if 'text_color' not in st.session_state:
+    st.session_state['text_color'] = "#000000"
+if 'stroke_color' not in st.session_state:
+    st.session_state['stroke_color'] = "#FFFFFF"
+if 'x_position' not in st.session_state:
+    st.session_state['x_position'] = 512
+if 'y_position' not in st.session_state:
+    st.session_state['y_position'] = 512
 
 # OpenAI API Key 설정
 try:
@@ -235,52 +249,10 @@ def render_ui():
             if motivational_quote:
                 st.session_state['quote'] = motivational_quote  # 초기화 시 생성된 글귀를 저장
 
-                st.markdown('<div class="result-container"><h3><i class="fas fa-quote-left" style="color: #667eea;"></i> 추천 글귀 (수정 가능)</h3>', unsafe_allow_html=True)
-                selected_quote = st.text_area("글귀 입력", value=st.session_state['quote'], height=100)
-                st.session_state['quote'] = selected_quote
+    st.markdown('<div class="result-container"><h3><i class="fas fa-quote-left" style="color: #667eea;"></i> 추천 글귀 (수정 가능)</h3>', unsafe_allow_html=True)
+    selected_quote = st.text_area("글귀 입력", value=st.session_state['quote'], height=100)
+    st.session_state['quote'] = selected_quote
                 
-                # 이미지 선택 및 글귀 추가
-                st.markdown('<div class="section-header"><i class="fas fa-image"></i> 배경 이미지를 선택하세요</div>', unsafe_allow_html=True)
-                uploaded_images = ["네잎클로버.jpg", '라이즈 소희.jpg', '라이즈 앤톤.jpg', '라이즈 원빈.jpg', '라이즈 은석.jpg', '물감.jpg', '물결.jpg', '바다.jpg', '비눗방울.jpg', '에스파 카리나.jpg', '투데이.jpg', '고양이.jpg', '동화.jpg', '노을.jpg', '어항 고양이.jpg', '어항.jpg', '화사한 고양이.jpg', '심해.jpg', '크리스마스.jpg']
-                selected_image = st.selectbox("🖼️ 배경 이미지 선택", options=uploaded_images)
-
-                if selected_image:
-                    st.session_state['background_image_url'] = selected_image
-                    image = Image.open(selected_image)
-                    st.image(image, caption="선택된 배경 이미지", use_column_width=False)
-
-                    st.markdown('<div class="section-header"><i class="fas fa-paint-brush"></i> 스타일을 설정하세요</div>', unsafe_allow_html=True)
-
-                    col1, col2 = st.columns(2)
-                    with col1:
-                        font_choice = st.selectbox("📝 글꼴 선택", ["나눔손글씨 가람연꽃", "예스 명조 레귤러"])
-                        font_size = st.number_input("📏 글귀 크기 (pt)", min_value=10, max_value=200, value=30, step=1)
-
-                    with col2:
-                        text_color = st.color_picker("🎨 글귀 색상", "#000000")
-                        stroke_color = st.color_picker("✏️ 글귀 테두리 색상", "#FFFFFF")
-
-                    st.markdown('<div class="section-header"><i class="fas fa-arrows-alt"></i> 글귀 위치를 조정하세요</div>', unsafe_allow_html=True)
-                    x_position = st.slider("⬅️➡️ x 좌표 (픽셀)", min_value=0, max_value=2048, value=512, step=10)
-                    y_position = st.slider("⬆️⬇️ y 좌표 (픽셀)", min_value=0, max_value=2048, value=512, step=10)
-
-                    # 이미지에 글귀 추가
-                    final_image = overlay_text_with_custom_font(
-                        st.session_state['background_image_url'],
-                        st.session_state['quote'],  # 수정된 글귀 반영
-                        font_choice,
-                        text_color=text_color,
-                        stroke_color=stroke_color,
-                        x=x_position,
-                        y=y_position,
-                        font_size=font_size
-                    )
-
-                    if final_image:
-                        st.markdown('<div class="section-header"><i class="fas fa-magic"></i> 완성된 책갈피</div>', unsafe_allow_html=True)
-                        st.image(final_image, caption="✨ 글귀가 추가된 이미지", use_column_width=False)
-
-        else:
-            st.warning('💌 모든 질문에 답해주세요!')
-
-render_ui()
+    # 이미지 선택 및 글귀 추가
+    st.markdown('<div class="section-header"><i class="fas fa-image"></i> 배경 이미지를 선택하세요</div>', unsafe_allow_html=True)
+    uploaded_images = ["네잎클로버.jpg
