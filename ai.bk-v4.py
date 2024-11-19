@@ -171,30 +171,111 @@ def get_motivational_quote(answers):
         st.error(f"ChatGPT API 호출 중 오류가 발생했습니다: {e}")
         return None
 
+def overlay_text_with_custom_font(image_path, text, font_choice, text_color, stroke_color, x=None, y=None, font_size=60, upscale_factor=6):
+    try:
+        image = Image.open(image_path)
+        original_size = image.size
+        high_res_size = (original_size[0] * upscale_factor, original_size[1] * upscale_factor)
+        image = image.resize(high_res_size, Image.LANCZOS)
+        
+        font_paths = {
+            "나눔손글씨 가람연꽃": "나눔손글씨 가람연꽃.ttf",
+            "나눔손글씨 펜": "나눔손글씨 펜.ttf",
+            "나눔고딕": "나눔고딕.ttf",
+            "돋움체": "돋움체.ttf"
+        }
+        font_path = font_paths.get(font_choice, "나눔손글씨 가람연꽃.ttf")
+        font = ImageFont.truetype(font_path, font_size * upscale_factor)
+    except (UnidentifiedImageError, IOError) as e:
+        st.error(f"이미지를 불러오거나 글꼴을 로드하는 중 오류가 발생했습니다: {e}")
+        return None
+
+    draw = ImageDraw.Draw(image)
+    lines = text.split("\n")
+    text_width = max([draw.textbbox((0, 0), line, font=font)[2] for line in lines]) if lines else 0
+    total_text_height = sum([draw.textbbox((0, 0), line, font=font)[3] for line in lines]) + (len(lines) - 1) * 10
+
+    if x is None or y is None:
+        x = (image.width - text_width) / 2
+        y = (image.height - total_text_height) / 2
+
+    y_offset = y
+    for line in lines:
+        draw.text((x, y_offset), line, fill=text_color, font=font, align="center", stroke_width=8, stroke_fill=stroke_color)
+        y_offset += draw.textbbox((0, 0), line, font=font)[3] + 10 * upscale_factor
+
+    image = image.resize(original_size, Image.LANCZOS)
+    return image
+
 # 메인 앱 UI
-st.markdown('<h1 class="main-title">✨ 심리검사를 통해 따뜻한 글귀를 얻고 나만의 책갈피를 만들어보세요!</h1>', unsafe_allow_html=True)
-st.markdown('<p style="text-align: center; color: #666;">심리검사를 진행하고, 당신에게 어울리는 글귀와 관련된 이미지를 받아보세요!</p>', unsafe_allow_html=True)
+def render_ui():
+    st.markdown('<h1 class="main-title">✨ 심리검사를 통해 따뜻한 글귀를 얻고 나만의 책갈피를 만들어보세요!</h1>', unsafe_allow_html=True)
+    st.markdown('<p style="text-align: center; color: #666;">심리검사를 진행하고, 당신에게 어울리는 글귀와 관련된 이미지를 받아보세요!</p>', unsafe_allow_html=True)
 
-questions = [
-    {"icon": "fas fa-smile", "text": "오늘 기분이 어떤가요?"},
-    {"icon": "fas fa-heart", "text": "당신의 가장 소중한 것은 무엇인가요?"},
-    {"icon": "fas fa-user-friends", "text": "애인이 있으신가요?"},
-    {"icon": "fas fa-cloud", "text": "현재 가장 큰 고민거리가 무엇인가요?"},
-    {"icon": "fas fa-star", "text": "소원이 무엇인가요?"},
-]
+    questions = [
+        {"icon": "fas fa-smile", "text": "오늘 기분이 어떤가요?"},
+        {"icon": "fas fa-heart", "text": "당신의 가장 소중한 것은 무엇인가요?"},
+        {"icon": "fas fa-user-friends", "text": "애인이 있으신가요?"},
+        {"icon": "fas fa-cloud", "text": "현재 가장 큰 고민거리가 무엇인가요?"},
+        {"icon": "fas fa-star", "text": "소원이 무엇인가요?"},
+    ]
 
-answers = []
+    answers = []
 
-for question in questions:
-    st.markdown(f'<div class="input-container"><div><i class="{question["icon"]} icon"></i>{question["text"]}</div></div>', unsafe_allow_html=True)
-    answer = st.text_input(question["text"])
-    answers.append(answer)
+    for question in questions:
+        st.markdown(f'<div class="input-container"><div><i class="{question["icon"]} icon"></i>{question["text"]}</div></div>', unsafe_allow_html=True)
+        answer = st.text_input(question["text"])
+        answers.append(answer)
 
-if st.button("✨ 결과 제출"):
-    if all(answers):
-        motivational_quote = get_motivational_quote(answers)
-        if motivational_quote:
-            st.markdown('<div class="result-container"><h3><i class="fas fa-quote-left" style="color: #667eea;"></i> 추천 글귀</h3>', unsafe_allow_html=True)
-            st.write(f"{motivational_quote}")
-    else:
-        st.warning('💌 모든 질문에 답해주세요!')
+    if st.button("✨ 결과 제출"):
+        if all(answers):
+            motivational_quote = get_motivational_quote(answers)
+            if motivational_quote:
+                st.markdown('<div class="result-container"><h3><i class="fas fa-quote-left" style="color: #667eea;"></i> 추천 글귀</h3>', unsafe_allow_html=True)
+                st.write(f"{motivational_quote}")
+                
+                # 이미지 선택 및 글귀 추가
+                st.markdown('<div class="section-header"><i class="fas fa-image"></i> 배경 이미지를 선택하세요</div>', unsafe_allow_html=True)
+                uploaded_images = ["네잎클로버.jpg", "라이즈 소희.jpg", "물감.jpg", "바다.jpg"]
+                selected_image = st.selectbox("🖼️ 배경 이미지 선택", options=uploaded_images)
+
+                if selected_image:
+                    st.session_state['background_image_url'] = selected_image
+                    image = Image.open(selected_image)
+                    st.image(image, caption="선택된 배경 이미지", use_column_width=False)
+
+                    st.markdown('<div class="section-header"><i class="fas fa-paint-brush"></i> 스타일을 설정하세요</div>', unsafe_allow_html=True)
+
+                    col1, col2 = st.columns(2)
+                    with col1:
+                        font_choice = st.selectbox("📝 글꼴 선택", ["나눔손글씨 가람연꽃", "예스 명조 레귤러"])
+                        font_size = st.number_input("📏 글귀 크기 (pt)", min_value=10, max_value=200, value=30, step=1)
+
+                    with col2:
+                        text_color = st.color_picker("🎨 글귀 색상", "#000000")text_color = st.color_picker("🎨 글귀 색상", "#000000")
+                        stroke_color = st.color_picker("✏️ 글귀 테두리 색상", "#FFFFFF")
+
+                    st.markdown('<div class="section-header"><i class="fas fa-arrows-alt"></i> 글귀 위치를 조정하세요</div>', unsafe_allow_html=True)
+                    x_position = st.slider("⬅️➡️ x 좌표 (픽셀)", min_value=0, max_value=2048, value=512, step=10)
+                    y_position = st.slider("⬆️⬇️ y 좌표 (픽셀)", min_value=0, max_value=2048, value=512, step=10)
+
+                    # 이미지에 글귀 추가
+                    final_image = overlay_text_with_custom_font(
+                        st.session_state['background_image_url'],
+                        motivational_quote,
+                        font_choice,
+                        text_color=text_color,
+                        stroke_color=stroke_color,
+                        x=x_position,
+                        y=y_position,
+                        font_size=font_size
+                    )
+
+                    if final_image:
+                        st.markdown('<div class="section-header"><i class="fas fa-magic"></i> 완성된 책갈피</div>', unsafe_allow_html=True)
+                        st.image(final_image, caption="✨ 글귀가 추가된 이미지", use_column_width=False)
+
+        else:
+            st.warning('💌 모든 질문에 답해주세요!')
+
+render_ui()
