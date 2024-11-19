@@ -1,5 +1,4 @@
 import openai
-from openai import OpenAIError
 import streamlit as st
 from PIL import Image, ImageDraw, ImageFont, UnidentifiedImageError
 import cv2
@@ -198,18 +197,19 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# 핵심 함수들
+# 심리 검사 결과에 따른 글귀 생성 함수
 def get_motivational_quote(answers):
     try:
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
-            messages=[{"role": "user", "content": f"사용자의 심리 검사 결과가 다음과 같아: {answers}. 이 사용자에게 어울리는 짧고 따뜻하고 긍정적인 명언과 같은 글귀 1개 20글자 내로 추천해줘."}],
-            max_tokens=50,
-            temperature=0.7
+            messages=[
+                {"role": "system", "content": "You are a helpful assistant."},
+                {"role": "user", "content": f"사용자의 심리 검사 결과가 다음과 같아: {answers}. 이 사용자에게 어울리는 짧고 따뜻하고 긍정적인 명언과 같은 글귀 1개 20글자 내로 추천해줘."}
+            ]
         )
-        motivational_quote = response.choices[0].message.content.strip()
+        motivational_quote = response['choices'][0]['message']['content'].strip()
         return motivational_quote
-    except Exception as e:
+    except openai.error.OpenAIError as e:
         st.error(f"ChatGPT API 호출 중 오류가 발생했습니다: {e}")
         return None
 
@@ -217,6 +217,7 @@ def get_motivational_quote(answers):
 st.markdown('<h1 class="main-title">✨ 심리검사를 통해 따뜻한 글귀를 얻고 나만의 책갈피를 만들어보세요!</h1>', unsafe_allow_html=True)
 st.markdown('<p style="text-align: center; color: #666;">심리검사를 진행하고, 당신에게 어울리는 글귀와 관련된 이미지를 받아보세요!</p>', unsafe_allow_html=True)
 
+# 질문 리스트
 questions = [
     {"icon": "fas fa-smile", "text": "오늘 기분이 어떤가요?"},
     {"icon": "fas fa-heart", "text": "당신의 가장 소중한 것은 무엇인가요?"},
@@ -227,11 +228,13 @@ questions = [
 
 answers = []
 
+# Q&A 섹션
 for question in questions:
     answer = st.text_input(question["text"])
     answers.append(answer)
 
+# 결과 제출 버튼
 if st.button("결과 제출"):
-    motivational_quote = get_motivational_quote(answers)
-    if motivational_quote:
-        st.write(f"추천 글귀: {motivational_quote}")
+    if all(answers):  # 모든 질문에 답변이 있는지 확인
+        motivational_quote = get_motivational_quote(answers)
+        if motivational_quote
