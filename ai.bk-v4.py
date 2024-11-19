@@ -163,9 +163,9 @@ def get_motivational_quote(answers):
             max_tokens=50,
             temperature=0.7
         )
-        motivational_quote = response.choices[0].message.content.strip()
+        motivational_quote = response['choices'][0]['message']['content'].strip()
         return motivational_quote
-    except Exception as e:
+    except OpenAIError as e:
         st.error(f"ChatGPT API 호출 중 오류가 발생했습니다: {e}")
         return None
 
