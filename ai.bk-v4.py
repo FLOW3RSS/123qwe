@@ -256,3 +256,48 @@ def render_ui():
     # 이미지 선택 및 글귀 추가
     st.markdown('<div class="section-header"><i class="fas fa-image"></i> 배경 이미지를 선택하세요</div>', unsafe_allow_html=True)
     uploaded_images = ["네잎클로버.jpg", '라이즈 소희.jpg', '라이즈 앤톤.jpg', '라이즈 원빈.jpg', '라이즈 은석.jpg', '물감.jpg', '물결.jpg', '바다.jpg', '비눗방울.jpg', '에스파 카리나.jpg', '투데이.jpg', '고양이.jpg', '동화.jpg', '노을.jpg', '어항 고양이.jpg', '어항.jpg', '화사한 고양이.jpg', '심해.jpg', '크리스마스.jpg']
+    selected_image = st.selectbox("🖼️ 배경 이미지 선택", options=uploaded_images)
+
+    if selected_image:
+        st.session_state['background_image_url'] = selected_image
+        image = Image.open(selected_image)
+        st.image(image, caption="선택된 배경 이미지", use_column_width=False)
+
+        st.markdown('<div class="section-header"><i class="fas fa-paint-brush"></i> 스타일을 설정하세요</div>', unsafe_allow_html=True)
+
+        col1, col2 = st.columns(2)
+        with col1:
+            font_choice = st.selectbox("📝 글꼴 선택", ["나눔손글씨 가람연꽃", "예스 명조 레귤러"], index=0)
+            st.session_state['font_choice'] = font_choice
+            font_size = st.number_input("📏 글귀 크기 (pt)", min_value=10, max_value=200, value=st.session_state['font_size'], step=1)
+            st.session_state['font_size'] = font_size
+
+        with col2:
+            text_color = st.color_picker("🎨 글귀 색상", st.session_state['text_color'])
+            st.session_state['text_color'] = text_color
+            stroke_color = st.color_picker("✏️ 글귀 테두리 색상", st.session_state['stroke_color'])
+            st.session_state['stroke_color'] = stroke_color
+
+        st.markdown('<div class="section-header"><i class="fas fa-arrows-alt"></i> 글귀 위치를 조정하세요</div>', unsafe_allow_html=True)
+        x_position = st.slider("⬅️➡️ x 좌표 (픽셀)", min_value=0, max_value=2048, value=st.session_state['x_position'], step=10)
+        st.session_state['x_position'] = x_position
+        y_position = st.slider("⬆️⬇️ y 좌표 (픽셀)", min_value=0, max_value=2048, value=st.session_state['y_position'], step=10)
+        st.session_state['y_position'] = y_position
+
+        # 이미지에 글귀 추가
+        final_image = overlay_text_with_custom_font(
+            st.session_state['background_image_url'],
+            st.session_state['quote'],  # 수정된 글귀 반영
+            st.session_state['font_choice'],
+            text_color=st.session_state['text_color'],
+            stroke_color=st.session_state['stroke_color'],
+            x=st.session_state['x_position'],
+            y=st.session_state['y_position'],
+            font_size=st.session_state['font_size']
+        )
+
+        if final_image:
+            st.markdown('<div class="section-header"><i class="fas fa-magic"></i> 완성된 책갈피</div>', unsafe_allow_html=True)
+            st.image(final_image, caption="✨ 글귀가 추가된 이미지", use_column_width=False)
+
+render_ui()
