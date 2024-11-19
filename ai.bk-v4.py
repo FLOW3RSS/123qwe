@@ -231,12 +231,13 @@ def render_ui():
         if all(answers):
             motivational_quote = get_motivational_quote(answers)
             if motivational_quote:
-                st.markdown('<div class="result-container"><h3><i class="fas fa-quote-left" style="color: #667eea;"></i> 추천 글귀</h3>', unsafe_allow_html=True)
-                st.write(f"{motivational_quote}")
+                st.markdown('<div class="result-container"><h3><i class="fas fa-quote-left" style="color: #667eea;"></i> 추천 글귀 (수정 가능)</h3>', unsafe_allow_html=True)
+                selected_quote = st.text_area("글귀 입력", value=st.session_state['quote'], height=100)
+                st.session_state['quote'] = selected_quote
                 
                 # 이미지 선택 및 글귀 추가
                 st.markdown('<div class="section-header"><i class="fas fa-image"></i> 배경 이미지를 선택하세요</div>', unsafe_allow_html=True)
-                uploaded_images = ["네잎클로버.jpg", "라이즈 소희.jpg", "물감.jpg", "바다.jpg"]
+                uploaded_images = ["네잎클로버.jpg", '라이즈 소희.jpg', '라이즈 앤톤.jpg', '라이즈 원빈.jpg', '라이즈 은석.jpg', '물감.jpg', '물결.jpg', '바다.jpg', '비눗방울.jpg', '에스파 카리나.jpg', '투데이.jpg', '고양이.jpg', '동화.jpg', '노을.jpg', '어항 고양이.jpg', '어항.jpg', '화사한 고양이.jpg', '심해.jpg', '크리스마스.jpg']
                 selected_image = st.selectbox("🖼️ 배경 이미지 선택", options=uploaded_images)
 
                 if selected_image:
