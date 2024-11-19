@@ -17,6 +17,8 @@ if 'show_qa' not in st.session_state:
     st.session_state.show_qa = True
 if 'show_result' not in st.session_state:
     st.session_state.show_result = False
+if 'quote' not in st.session_state:
+    st.session_state['quote'] = ""  # 기본값 설정
 
 # OpenAI API Key 설정
 try:
@@ -231,6 +233,8 @@ def render_ui():
         if all(answers):
             motivational_quote = get_motivational_quote(answers)
             if motivational_quote:
+                st.session_state['quote'] = motivational_quote  # 초기화 시 생성된 글귀를 저장
+
                 st.markdown('<div class="result-container"><h3><i class="fas fa-quote-left" style="color: #667eea;"></i> 추천 글귀 (수정 가능)</h3>', unsafe_allow_html=True)
                 selected_quote = st.text_area("글귀 입력", value=st.session_state['quote'], height=100)
                 st.session_state['quote'] = selected_quote
@@ -263,7 +267,7 @@ def render_ui():
                     # 이미지에 글귀 추가
                     final_image = overlay_text_with_custom_font(
                         st.session_state['background_image_url'],
-                        motivational_quote,
+                        st.session_state['quote'],  # 수정된 글귀 반영
                         font_choice,
                         text_color=text_color,
                         stroke_color=stroke_color,
